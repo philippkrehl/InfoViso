@@ -9,33 +9,53 @@
 	
 	<script type="text/javascript">
 	
+	//Globale Variablen
+	
+	// Zugriff auf die erste Jahreszahl: loveArray[1],
+	// Zugriff auf Gesammtzahl: loveArray['found']);
+	// Zugriff auf den Wert der ersten Jahreszahl: loveArray[0][0]
+	var loveArray = new Array();
+	var hateArray = new Array();
+	
 	$( document ).ready(function() {
 		
-		var url = createRequestURL('content','6e499da47fcb281145e490fb6fba3d02028ba8c83af1f50383ee',null,null,'liebe',null,'1year',null,null);
+		var urlLove = createRequestURL('content',
+								   '6e499da47fcb281145e490fb6fba3d02028ba8c83af1f50383ee',
+								   null,
+								   null,
+								   'liebe',
+								   null,
+								   '1year',
+								   null,
+								   null);
 		
 	    $.ajax({
 	       type: 'GET',
-	        url: url,
+	        url: urlLove,
 	        contentType: "application/json",
 	        dataType: 'jsonp',
-	        success: function(data) { successCallback(data); }, 
-	        error: function() { notSuccessCallback(); }
+	        success: function(data) { loveArray = successCallback(data); },
+	        error: function() { notSuccessCallback(); },
+	        complete : function() {console.log(loveArray[1]); }
 	    });
-	    
 	});
 	
     function successCallback(data){
-    	
-    	var loveArray = new Array(); 
-    	
+    	var arrayObject = new Array();
+    	var i = 0;
+    	// API Request verarbeiten: Jahreszahl und Anzahl der vorgekommenen Wörter pro Jahr in einem Array konvertieren 
+    	// und Gesammtanzahl der gefunden Wörter
     	$.each(data.facets.release_date, function(index, value){
     		if(index !== 'start' && index !== 'end' && index !== 'gap') {
-    			//console.log(moment(index).format('YYYY')  + ': ' + value);
-    			loveArray[moment(index).format('YYYY')] = value;
-    			console.log(loveArray);
+    			arrayObject.push([Number(moment(index).format('YYYY')), value]);
+    			i++;
     		}
     	})
-    	console.log(data.facets.release_date);
+    	// Sortieren nach Jahr
+    	arrayObject.sort(function(a,b) {return a[0] - b[0]});
+    	// Anzhal der gefundenen Wörter
+    	arrayObject['found'] = data.found;
+    	return arrayObject;
     }
     
     function notSuccessCallback(){
