@@ -1,20 +1,20 @@
 // "Terror AND USA" Request und Variablen
-var terrorRequest 	 	= new Zeit_API_Request_Builder('content','6e499da47fcb281145e490fb6fba3d02028ba8c83af1f50383ee','Terror AND USA AND release_date:[1990-01-01T00:00:00Z TO 2012-12-31T23:59:59.999Z]','1year');
+var terrorRequest 	 	= new Zeit_API_Request_Builder('content','6e499da47fcb281145e490fb6fba3d02028ba8c83af1f50383ee','Terror AND USA AND release_date:[1980-01-01T00:00:00Z TO 2012-12-31T23:59:59.999Z]','1year');
 var terrorRequestCheck 	= false
 var terrorArray 	 	= new Array();
 	
 // "Wahlkampf AND USA" Request und Variablen
-var wahlRequest 		= new Zeit_API_Request_Builder('content','6e499da47fcb281145e490fb6fba3d02028ba8c83af1f50383ee','Wahlkampf AND USA AND release_date:[1990-01-01T00:00:00Z TO 2012-12-31T23:59:59.999Z]','1year');
+var wahlRequest 		= new Zeit_API_Request_Builder('content','6e499da47fcb281145e490fb6fba3d02028ba8c83af1f50383ee','Wahlkampf AND USA AND release_date:[1980-01-01T00:00:00Z TO 2012-12-31T23:59:59.999Z]','1year');
 var wahlRequestCheck 	= false
 var wahlArray 		 	= new Array();
 
 //"Waffen AND USA" Request und Variablen
-var waffenRequest 		= new Zeit_API_Request_Builder('content','6e499da47fcb281145e490fb6fba3d02028ba8c83af1f50383ee','Waffen AND USA AND release_date:[1990-01-01T00:00:00Z TO 2012-12-31T23:59:59.999Z]','1year');
+var waffenRequest 		= new Zeit_API_Request_Builder('content','6e499da47fcb281145e490fb6fba3d02028ba8c83af1f50383ee','Waffen AND USA AND release_date:[1980-01-01T00:00:00Z TO 2012-12-31T23:59:59.999Z]','1year');
 var waffenRequestCheck 	= false
 var waffenArray 		= new Array();
 
 //"Angst AND USA" Request und Variablen
-var angstRequest 		= new Zeit_API_Request_Builder('content','6e499da47fcb281145e490fb6fba3d02028ba8c83af1f50383ee','Angst AND USA AND release_date:[1990-01-01T00:00:00Z TO 2012-12-31T23:59:59.999Z]','1year');
+var angstRequest 		= new Zeit_API_Request_Builder('content','6e499da47fcb281145e490fb6fba3d02028ba8c83af1f50383ee','Angst AND USA AND release_date:[1980-01-01T00:00:00Z TO 2012-12-31T23:59:59.999Z]','1year');
 var angstRequestCheck 	= false
 var angstArray 		 	= new Array();
 	
