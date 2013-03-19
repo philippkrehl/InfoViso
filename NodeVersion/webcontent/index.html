@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>InfoViso</title>
+		<script src="/socket.io/socket.io.js"></script>
+		<script>
+			
+			//globales io Object, des Servers, aufrufen
+		 	var socket = io.connect();
+		 
+			// Daten senden
+		    socket.emit('zeit', { content: 'liebe' });
+		    
+			// Daten empfangen
+		    socket.on('zeitResponse', function(data){
+		    	console.log(data);
+		    });
+		    
+		</script>
+	</head>
+	<body>
+		
+	</body>
+</html>
