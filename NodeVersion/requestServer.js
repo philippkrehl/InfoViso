@@ -1,5 +1,6 @@
 var app 		= require('express')();
 var http 		= require('http');
+var express     = require('express');
 var httpServer 	= require('http').createServer(app).listen(8888);
 var io 			= require('socket.io').listen(httpServer);
 
@@ -10,6 +11,7 @@ app.configure(function () {
 		console.log('%s %s', req.method, req.url);
 		next();
 	});
+    app.use('/libraries', express.static(__dirname + '/webcontent/libraries'));
 });
 
 app.get('/', function (req, res) {
@@ -45,11 +47,14 @@ io.sockets.on('connection', function (socket) {
 		 });   
 		
 	});
-	
+
+
+    socket.on('nyt', function(data){
+          //todo
+    }) ;
 	
 	socket.on('diconnect', function(){
 		// disconet des client
 	});
 });
-
 
