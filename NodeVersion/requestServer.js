@@ -12,6 +12,8 @@ app.configure(function () {
 		next();
 	});
     app.use('/libraries', express.static(__dirname + '/webcontent/libraries'));
+    app.use('/css', express.static(__dirname + '/webcontent/css'));
+    app.use('/img', express.static(__dirname + '/webcontent/img'));
 });
 
 app.get('/', function (req, res) {
