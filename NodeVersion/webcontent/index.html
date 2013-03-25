@@ -12,9 +12,9 @@
         <script src="/libraries/bootstrap.min.js"></script>
         <script src="/libraries/processing-1.4.1.min.js"></script>
         <script src="/libraries/moment.min.js"></script>
+        <script src="/libraries/jquery.overscroll.min.js"></script>
 
 		<script type="text/javascript">
-            var zeitResponse;
 
             $(document).ready(function(){
 
@@ -22,29 +22,60 @@
                 var sketchWidth     = $(window).width();
                 var sketchHeigth    = 440;
                 var socket          = io.connect();  //globales io Object, des Servers, aufrufen
+                var yearBegin       = 1993;
+                var yearEnd         = 2012;
+                var processingArray = new Array(yearEnd-yearBegin+1);
+                var scale           = 1.00;
 
-                // Daten senden
-                socket.emit('zeit', { content: 'liebe' });
+                for(var x = 0; x < processingArray.length; x++){
+                    processingArray[x] = {
+                        'year': yearBegin,
+                        'zeit': 0,
+                        'nyt' : 0
+                    };
+                    yearBegin++;
+                }
 
-                // Daten empfangen
+                // Daten senden für Zeit online
+                socket.emit('zeit', { content: 'facebook' });
+
+                // Daten empfangen von Zeit online
                 socket.on('zeitResponse', function(data){
-                    zeitResponse     = new Array();
-                    var i 			= 0;
-
+                    for(var i = 0; i < processingArray; i++){
+                        processingArray[i].zeit = 0;
+                    }
                     // API Request Verarbeiten: Jahreszahl und Anzahl der vorgekommenen Wörter pro Jahr in einem Array konvertieren
                     // und Gesammtanzahl der gefunden Wörter
-                    $.each(data.facets.release_date, function(index, value){
-                        if(index !== 'start' && index !== 'end' && index !== 'gap') {
-                            zeitResponse.push([Number(moment(index).format('YYYY')), value]);
-                            i++;
-                        }
+                    $.each(data.facets.release_date, function(date, value){
+                        for(var x = 0; x < processingArray.length; x++){
+                            if(date !== 'start' && date !== 'end' && date !== 'gap') {
+                                if(Number(moment(date).format('YYYY')) == processingArray[x].year){
+                                    processingArray[x].zeit = value;
+                                    break;
+                                };
+                            };
+                        };
                     });
-                    // Sortieren nach Jahr
-                    zeitResponse.sort(function(a,b) {return a[0] - b[0];} );
-                    // Anzhal der gefundenen Wörter
-                    zeitResponse['found'] = data.found;
-              });
+                });
 
+                // Daten senden für New York Times
+                socket.emit('nyt', { content: 'facebook' });
+
+                socket.on('nytResponse', function(data){
+                    for(var i = 0; i < processingArray; i++){
+                        processingArray[i].nyt = 0;
+                    }
+                    // API Request Verarbeiten: Jahreszahl und Anzahl der vorgekommenen Wörter pro Jahr in einem Array konvertieren
+                    // und Gesammtanzahl der gefunden Wörter
+                    for(var i = 0; i  < data.facets.publication_year.length; i++ ){
+                        for(var x = 0; x < processingArray.length; x++){
+                            if(parseInt(data.facets.publication_year[i].term) == processingArray[x].year){
+                                processingArray[x].nyt = data.facets.publication_year[i].count;
+                                break;
+                            };
+                        };
+                    };
+                });
 
                 sketch.attachFunction = function(processing){
 
@@ -56,23 +87,43 @@
 
                     processing.draw = function(){
                         processing.size(sketchWidth,sketchHeigth);
-
-                        if(typeof zeitResponse != 'undefined'){
-                            /*for(var i=0; i < zeitResponse.length; i++){
-                                //todo
-                            }; */
-                            drawYear(processing,40,0,100,50,1754);
+                        processing.scale(scale);
+                        processing.background(241, 241, 241);
+                        var distanceX = 40;
+                        for(var i = 0; i < processingArray.length; i++){
+                            drawYear(processing,distanceX,0,processingArray[i].zeit*0.2,processingArray[i].nyt*0.2,processingArray[i].year);
+                            distanceX += 40;
                         };
-
-                    };
-
+                     };
                 };
 
                 var canvas = document.getElementById("myCanvas");
                 // attaching the sketch to the canvas
                 var p = new Processing(canvas, sketch);
 
+                $('#zeitButton').click(function(){
+                    // Daten senden
+                    if($('#zeitInput').val() == ''){
+                        socket.emit('zeit', { content: 'Irak' });
+                    }
+                    else{
+                        socket.emit('zeit', { content: $('#zeitInput').val() });
+                    };
+                });
 
+                $('#nytButton').click(function(){
+                    // Daten senden
+                    if($('#nytInput').val() == ''){
+                        socket.emit('nyt', { content: 'Iraq' });
+                    }
+                    else{
+                        socket.emit('nyt', { content: $('#nytInput').val() });
+                    };
+                });
+
+                $('#scale').change(function(){
+                    scale = this.value;
+                });
             });
 
             function drawYear(processing, startPointX, startPointY, value1, value2, year){
@@ -104,8 +155,7 @@
                 processing.popMatrix();
                 processing.popMatrix();
             };
-
-		</script>
+    </script>
 	</head>
 	<body>
         <div class="navbar navbar-fixed-top">
@@ -130,19 +180,26 @@
             <div class="row-fluid" style="height: 70px;">
                 <form>
                     <fieldset>
-                        <div class="span3" style="margin-left: 20px;">
+                        <div class="span3 input-append" style="margin-left: 20px;">
                             <label>Was sagt Zeit Online über:</label>
-                            <input type="text" placeholder="Iraq">
+                            <input id="zeitInput" type="text" placeholder="Irak">
+                            <button id="zeitButton" class="btn" type="button">Go!</button>
+
+                        </div>
+                        <div class="span3 input-append">
+                            <label>Was sagt New York Times über:</label>
+                            <input id="nytInput" type="text" placeholder="Iraq">
+                            <button id="nytButton" class="btn" type="button">Go!</button>
                         </div>
                         <div class="span3">
-                            <label>Was sagt New York Times über:</label>
-                            <input type="text" placeholder="Iraq">
+                            <label>Scalierung:</label>
+                            <input id="scale" type="range" min="0.01" max="4.00" step="0.01" value='1.00'>
                         </div>
                     </fieldset>
                 </form>
             </div>
             <div class="row-fluid">
-                <div class="span12">
+                <div id="canvasContainer">
                     <canvas id="myCanvas"></canvas>
                 </div>
             </div>
