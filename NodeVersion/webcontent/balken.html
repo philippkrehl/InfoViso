@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>InfoViso</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="/css/bootstrap-responsive.min.css" rel="stylesheet">
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/libraries/jquery-1.9.1.min.js"></script>
+    <script src="/libraries/bootstrap.min.js"></script>
+    <script src="/libraries/processing-1.4.1.min.js"></script>
+    <script src="/libraries/moment.min.js"></script>
+    <script src="/libraries/jquery.overscroll.min.js"></script>
+
+    <script type="text/javascript">
+        var yearBegin           = 1992;
+        var yearEnd             = 2012;
+
+        $(document).ready(function(){
+
+            var sketch              = new Processing.Sketch();
+            var sketchWidth         = $(window).width();
+            var sketchHeigth        = 440;
+            var socket              = io.connect();  //globales io Object, des Servers, aufrufen
+            var scale               = 1.00;
+            var processingObject    = {
+                                        'zeit' : {},
+                                        'nyt'  : {}
+                                      };
+
+            for(var x = yearBegin; x < yearEnd+1; x++){
+                processingObject.zeit[x] = {
+                    '01' : 0,
+                    '02' : 0,
+                    '03' : 0,
+                    '04' : 0,
+                    '05' : 0,
+                    '06' : 0,
+                    '07' : 0,
+                    '08' : 0,
+                    '09' : 0,
+                    '10' : 0,
+                    '11' : 0,
+                    '12' : 0
+                };
+
+                processingObject.nyt[x] = {
+                    '01' : 0,
+                    '02' : 0,
+                    '03' : 0,
+                    '04' : 0,
+                    '05' : 0,
+                    '06' : 0,
+                    '07' : 0,
+                    '08' : 0,
+                    '09' : 0,
+                    '10' : 0,
+                    '11' : 0,
+                    '12' : 0
+                }
+            }
+
+            // Daten senden für Zeit online
+            socket.emit('zeit', { content: 'Irak' });
+
+            // Daten empfangen von Zeit online
+            socket.on('zeitResponse', function(data){
+                // die per Request ermittelten Werte im processingObject speichern,
+                // nach dem Muster Jahr == Jahr und Monat == Monat
+                $.each(data.facets.release_date, function(date, value){
+                    if(date !== 'start' && date !== 'end' && date !== 'gap') {
+                        processingObject.zeit[Number(moment(date).format('YYYY'))][moment(date).format('MM')] = value;
+                    }
+
+                });
+                console.log(processingObject);
+            });
+
+            // Daten senden für New York Times
+            // Intervall, weil die NYT ein Limit gesetzt hat, auf die Anzahl der Reqeust per Sec.
+            socket.emit('nyt', { content: 'Iraq', yearBegin: yearBegin, yearEnd: yearEnd });
+
+            socket.on('nytResponse', function(data){
+                // Test ob das ResponseObject gefüllt ist
+                if(Object.keys( data.facets ).length !== 0){
+                    // processingObject mit Daten aus dem Response füllen
+                    for(var t = 0; t < data.facets.publication_month.length; t++){
+                        processingObject.nyt[data.tokens[1].substring(18,22)][data.facets.publication_month[t].term] =  data.facets.publication_month[t].count;
+                    }
+                }
+            });
+
+            sketch.attachFunction = function(processing){
+
+                processing.setup = function(){
+                    processing.noStroke();
+                    processing.smooth();
+                    processing.background(241, 241, 241);
+                };
+
+                processing.draw = function(){
+                    processing.size(sketchWidth,sketchHeigth);
+                    processing.scale(scale);
+                    processing.background(241, 241, 241);
+
+                    drawYear(processing,processingObject);
+
+                };
+            };
+
+            var canvas = document.getElementById("myCanvas");
+            // attaching the sketch to the canvas
+            var p = new Processing(canvas, sketch);
+
+            $('#zeitButton').click(function(){
+                // processingObject Werte auf null zurück setzten, damit die Werte aus dem vorigen Request
+                // nicht mit genutzt werden, falls diese nicht überschrieben werden
+                for(var y = yearBegin; y < yearEnd+1; y++){
+                    $.each(processingObject.zeit[y], function(month, value){
+                        processingObject.zeit[y][month] = 0;
+                    });
+                };
+
+                // Daten senden
+                if($('#zeitInput').val() == ''){
+                    socket.emit('zeit', { content: 'Irak' });
+                }
+                else{
+                    socket.emit('zeit', { content: $('#zeitInput').val() });
+                };
+            });
+
+            $('#nytButton').click(function(){
+                // processingObject Werte auf null zurück setzten, damit die Werte aus dem vorigen Request
+                // nicht mit genutzt werden, falls diese nicht überschrieben werden
+                for(var y = yearBegin; y < yearEnd+1; y++){
+                    $.each(processingObject.nyt[y], function(mounth, value){
+                        processingObject.nyt[y][mounth] = 10;
+                    });
+                };
+
+                // Daten senden
+                if($('#nytInput').val() == ''){
+                    socket.emit('nyt', { content: 'Iraq', yearBegin: yearBegin, yearEnd: yearEnd});
+                }
+                else{
+                    socket.emit('nyt', { content: $('#nytInput').val(), yearBegin: yearBegin, yearEnd: yearEnd });
+                };
+            });
+
+            $('#scale').change(function(){
+                scale = this.value;
+            });
+        });
+
+        function drawYear(processing, processingObject){
+            var drawWeigth  = 0;
+            var barWeight   = 10
+
+            /*
+            for(var i = 0; i < processingArray.length; i++){
+                processing.pushMatrix();
+                processing.translate(drawWeigth,processing.height/2);
+                processing.fill(224,209,163,190);
+                processing.rect(0,0,barWeight,-processingArray[i].nyt);
+                processing.fill(33,51,49,190);
+                processing.rect(0,0,barWeight,processingArray[i].zeit);
+                drawWeigth =+ i*barWeight;
+                processing.popMatrix();
+            }
+            */
+
+            var temp = Object.keys(processingObject.nyt).length;
+            for(var t = yearBegin; t < yearEnd; t++ ){
+                $.each(processingObject.nyt[t], function(month, value){
+                    processing.pushMatrix();
+                    processing.translate(drawWeigth,processing.height/2);
+                    processing.fill(224,209,163,190);
+                    processing.rect(0,0,barWeight,-value);
+                    drawWeigth += barWeight;
+                    processing.popMatrix();
+                })
+            };
+            /*
+                processing.pushMatrix();
+                processing.translate(drawWeigth,processing.height/2);
+                processing.fill(224,209,163,190);
+                processing.rect(0,0,barWeight,100);
+                drawWeigth =+ t*barWeight;
+                processing.popMatrix();
+                */
+
+            //console.log(Object.keys(processingObject.nyt).length);
+            /*
+            for(var i = 0; i < processingArray.length; i++){
+                var drawWeigth = 5;
+                processing.rect(0,i*drawWeigth,drawWeigth,processingArray[i].zeit);
+                drawWeigth =+ 5;
+            }
+            /*
+            //Anfangsposition festlegen
+            processing.translate(startPointX,startPointY);
+            processing.pushMatrix();
+            processing.strokeWeight(2);
+            processing.stroke(140,134,129,20);
+            processing.line(startPointX,startPointY,startPointX,processing.height);
+            //Value 1
+            processing.translate(startPointX,processing.height*0.33);
+            processing.fill(33,51,49,190);
+            processing.ellipseMode(processing.CENTER)
+            processing.ellipse(0,0,value1,value1);
+            processing.popMatrix();
+            // Value 2
+            processing.pushMatrix();
+            processing.translate(startPointX,processing.height*0.66);
+            processing.fill(224,209,163,190);
+            processing.ellipseMode(processing.CENTER)
+            processing.ellipse(0,0,value2,value2);
+            processing.popMatrix();
+            // Year
+            processing.pushMatrix();
+            //processing.translate(startPointX,distanz*5);
+            processing.fill(0);
+            processing.text(year,startPointX-15,processing.height-5);
+            processing.popMatrix();
+
+            processing.popMatrix();
+            */
+        };
+    </script>
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <span class="brand" style="padding-left: 40px;">Informationsvisualisierung</span>
+        <ul class="nav">
+            <li class="active"><a href="#">App</a></li>
+            <li><a href="#">Theorie</a></li>
+            <li><a href="#">Code</a></li>
+        </ul>
+                <span class="text-right help-block" style="padding-right: 20px; padding-top: 10px;">
+                    <smal>philipp.krehl@fh-stralsund.de</smal>
+                </span>
+    </div>
+</div>
+<div class="container-fluid" style="margin-top: 45px; padding: 0;">
+    <div class="row-fluid">
+        <div class="page-header" style="margin-bottom: 10px; margin-top: 5px;  padding-bottom: 5px;">
+            <h2 style="margin-left: 10px">Querys <small> - Fragen von Interesse - </small> </h2>
+        </div>
+    </div>
+    <div class="row-fluid" style="height: 70px;">
+        <form>
+            <fieldset>
+                <div class="span3 input-append" style="margin-left: 20px;">
+                    <label>Was sagt Zeit Online über:</label>
+                    <input id="zeitInput" type="text" placeholder="Irak">
+                    <button id="zeitButton" class="btn" type="button">Go!</button>
+
+                </div>
+                <div class="span3 input-append">
+                    <label>Was sagt New York Times über:</label>
+                    <input id="nytInput" type="text" placeholder="Iraq">
+                    <button id="nytButton" class="btn" type="button">Go!</button>
+                </div>
+                <div class="span3">
+                    <label>Scalierung:</label>
+                    <input id="scale" type="range" min="0.01" max="4.00" step="0.01" value='1.00'>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <div class="row-fluid">
+        <div id="canvasContainer">
+            <canvas id="myCanvas"></canvas>
+        </div>
+    </div>
+</div>
+</body>
+</html>
