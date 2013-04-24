@@ -1,7 +1,8 @@
 var app 		= require('express')();
 var http 		= require('http');
 var express     = require('express');
-var httpServer 	= require('http').createServer(app).listen(8888);
+var port        = Number(process.env.PORT || 8888);
+var httpServer 	= require('http').createServer(app).listen(port);
 var io 			= require('socket.io').listen(httpServer);
 
 
@@ -15,6 +16,14 @@ app.configure(function () {
     app.use('/css', express.static(__dirname + '/webcontent/css'));
     app.use('/img', express.static(__dirname + '/webcontent/img'));
 });
+
+// heroku configuration
+/*
+io.configure(function () {
+    io.set("transports", ["xhr-polling"]);
+    io.set("polling duration", 10);
+});
+*/
 
 app.get('/', function (req, res) {
 	res.sendfile(__dirname + '/webcontent/index.html');
