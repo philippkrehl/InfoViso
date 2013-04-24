@@ -21,44 +21,24 @@ app.get('/', function (req, res) {
 	
 });
 
-//Test muss wieder gelöscht werden!!!
-app.get('/balken', function (req, res) {
-    res.sendfile(__dirname + '/webcontent/balken.html');
+app.get('/finale', function (req, res) {
+    res.sendfile(__dirname + '/webcontent/finale.html');
 
 });
 
 io.sockets.on('connection', function (socket) {
 	// Daten an Client senden: socket.emit();
 	// Daten vom Client empfangen: socket.on('EVENT', function(data){... mach was mit den Daten};);
-	
-	
-	socket.on('zeit', function(data){
-		var options = {
-				  hostname: 'api.zeit.de',
-				  port: 80,
-				  path: '/content?api_key=6e499da47fcb281145e490fb6fba3d02028ba8c83af1f50383ee&q=' + data.content + '%20AND%20release_date:%5B1994-01-01T00:00:00Z%20TO%202012-12-31T23:59:59.999Z%5D&facet_date=1month',
-                  method: 'GET',
-				  headers: { 'Content-Type': 'application/json' }
-		};
-
-		http.get(options, function(res) {    
-			  var data = '';
-			  
-			  res.on('data', function (chunk){
-			        data += chunk;
-			  });
-
-			  res.on('end',function(){
-			     socket.emit('zeitResponse', JSON.parse(data));
-			  }); 
-		 });   
-		
-	});
-
 
     socket.on('nyt', function(data){
 
             var t = data.yearBegin;
+
+            /*
+            Pro Jahr wird ein Get Request gesendet, das heißt für eine Zeitreihe von 20 Jahren müssen 20 Request gesendet werden.
+            Jedoch hat die NYT ein Limit "Question per Secend" in der API verbaut, somit müssen die Request durch eine setInterval
+            Funtion künstlich verlangsamt werden. Dies ist der Grund für die setInterval Funktion
+             */
             var interval = setInterval(function(){
 
                 var options = {

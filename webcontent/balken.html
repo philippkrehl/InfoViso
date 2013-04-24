@@ -21,10 +21,12 @@
         $(document).ready(function(){
 
             var sketch              = new Processing.Sketch();
+            sketch.use3DContext     = true;
             var sketchWidth         = $(window).width();
             var sketchHeigth        = 440;
             var socket              = io.connect();  //globales io Object, des Servers, aufrufen
             var scale               = 1.00;
+            var rotate              = 0.00;
             var processingObject    = {
                                         'zeit' : {},
                                         'nyt'  : {}
@@ -95,18 +97,63 @@
             sketch.attachFunction = function(processing){
 
                 processing.setup = function(){
+                    processing.size(sketchWidth,sketchHeigth, processing.P3D);
                     processing.noStroke();
                     processing.smooth();
-                    processing.background(241, 241, 241);
                 };
 
                 processing.draw = function(){
-                    processing.size(sketchWidth,sketchHeigth);
+                    //processing.size(sketchWidth,sketchHeigth, processing.P3D);
+                    //processing.pushMatrix();
+                    processing.translate(sketchWidth/2,0);
                     processing.scale(scale);
+                    processing.rotateY(processing.radians(rotate));
+                    //processing.popMatrix();
+
                     processing.background(241, 241, 241);
+                    processing.translate(0,sketchHeigth);
 
-                    drawYear(processing,processingObject);
+                    //drawYear(processing,processingObject);
+                    //processing.fill(132,121,212);
+                    //processing.translate(58, 48, 12);
+                    //processing.rotateY(0.5);
+                    //draw2(processing,processingObject);
 
+                    processing.pushMatrix();
+                    processing.translate(-sketchWidth/2,0);
+                    for(var t = yearBegin; t < yearEnd; t++ ){
+                        processing.pushMatrix();
+                        $.each(processingObject.nyt[t], function(month, value){
+                            processing.translate(10,0,0);
+                            processing.stroke(153);
+                            processing.fill(221,209,163,20);
+                            processing.pushMatrix();
+                            if(value != 0){
+                                processing.translate(0,-value/2,0);
+                                processing.box(10,-value,10);
+                            } else {
+                                processing.translate(0,0,0);
+                                processing.box(10,-1,10);
+                            }
+                            processing.popMatrix();
+                        });
+                        processing.popMatrix();
+                        $.each(processingObject.zeit[t], function(month, value){
+                            processing.translate(10,0);
+                            processing.stroke(153);
+                            processing.fill(121,109,63);
+                            processing.pushMatrix();
+                            if(value != 0){
+                                processing.translate(0,-value/2,10);
+                                processing.box(10,-value,10);
+                            } else{
+                                processing.translate(0,0,10);
+                                processing.box(10,-1,10);
+                            }
+                            processing.popMatrix();
+                        });
+                    };
+                    processing.popMatrix();
                 };
             };
 
@@ -137,7 +184,7 @@
                 // nicht mit genutzt werden, falls diese nicht überschrieben werden
                 for(var y = yearBegin; y < yearEnd+1; y++){
                     $.each(processingObject.nyt[y], function(mounth, value){
-                        processingObject.nyt[y][mounth] = 10;
+                        processingObject.nyt[y][mounth] = 0;
                     });
                 };
 
@@ -153,82 +200,54 @@
             $('#scale').change(function(){
                 scale = this.value;
             });
+
+            $('#rotate').change(function(){
+                rotate = this.value;
+            });
         });
 
         function drawYear(processing, processingObject){
-            var drawWeigth  = 0;
-            var barWeight   = 10
-
-            /*
-            for(var i = 0; i < processingArray.length; i++){
-                processing.pushMatrix();
-                processing.translate(drawWeigth,processing.height/2);
-                processing.fill(224,209,163,190);
-                processing.rect(0,0,barWeight,-processingArray[i].nyt);
-                processing.fill(33,51,49,190);
-                processing.rect(0,0,barWeight,processingArray[i].zeit);
-                drawWeigth =+ i*barWeight;
-                processing.popMatrix();
-            }
-            */
+            var drawWeigthNYT  = 0;
+            var drawWeigthZeit = 0;
+            var barWeight      = 10
 
             var temp = Object.keys(processingObject.nyt).length;
             for(var t = yearBegin; t < yearEnd; t++ ){
                 $.each(processingObject.nyt[t], function(month, value){
                     processing.pushMatrix();
-                    processing.translate(drawWeigth,processing.height/2);
+                    processing.translate(drawWeigthNYT,processing.height/2);
                     processing.fill(224,209,163,190);
                     processing.rect(0,0,barWeight,-value);
-                    drawWeigth += barWeight;
+                    drawWeigthNYT += barWeight;
+                    processing.popMatrix();
+                });
+
+                $.each(processingObject.zeit[t], function(month, value){
+                    processing.pushMatrix();
+                    processing.translate(drawWeigthZeit,processing.height/2);
+                    processing.fill(124,109,233,190);
+                    processing.rect(0,0,barWeight,value);
+                    drawWeigthZeit += barWeight;
                     processing.popMatrix();
                 })
+
+
             };
-            /*
-                processing.pushMatrix();
-                processing.translate(drawWeigth,processing.height/2);
-                processing.fill(224,209,163,190);
-                processing.rect(0,0,barWeight,100);
-                drawWeigth =+ t*barWeight;
-                processing.popMatrix();
-                */
-
-            //console.log(Object.keys(processingObject.nyt).length);
-            /*
-            for(var i = 0; i < processingArray.length; i++){
-                var drawWeigth = 5;
-                processing.rect(0,i*drawWeigth,drawWeigth,processingArray[i].zeit);
-                drawWeigth =+ 5;
-            }
-            /*
-            //Anfangsposition festlegen
-            processing.translate(startPointX,startPointY);
-            processing.pushMatrix();
-            processing.strokeWeight(2);
-            processing.stroke(140,134,129,20);
-            processing.line(startPointX,startPointY,startPointX,processing.height);
-            //Value 1
-            processing.translate(startPointX,processing.height*0.33);
-            processing.fill(33,51,49,190);
-            processing.ellipseMode(processing.CENTER)
-            processing.ellipse(0,0,value1,value1);
-            processing.popMatrix();
-            // Value 2
-            processing.pushMatrix();
-            processing.translate(startPointX,processing.height*0.66);
-            processing.fill(224,209,163,190);
-            processing.ellipseMode(processing.CENTER)
-            processing.ellipse(0,0,value2,value2);
-            processing.popMatrix();
-            // Year
-            processing.pushMatrix();
-            //processing.translate(startPointX,distanz*5);
-            processing.fill(0);
-            processing.text(year,startPointX-15,processing.height-5);
-            processing.popMatrix();
-
-            processing.popMatrix();
-            */
         };
+
+        function draw2 (processing, processingObject){
+            var barWeight      = 10
+
+            var temp = Object.keys(processingObject.nyt).length;
+            for(var t = yearBegin; t < yearEnd; t++ ){
+                $.each(processingObject.nyt[t], function(month, value){
+                    processing.stroke(153);
+                    processing.fill(224,209,163,190);
+                    processing.box(10,value,10);
+                });
+            };
+        };
+
     </script>
 </head>
 <body>
@@ -265,9 +284,13 @@
                     <input id="nytInput" type="text" placeholder="Iraq">
                     <button id="nytButton" class="btn" type="button">Go!</button>
                 </div>
-                <div class="span3">
+                <div class="span2">
                     <label>Scalierung:</label>
-                    <input id="scale" type="range" min="0.01" max="4.00" step="0.01" value='1.00'>
+                    <input id="scale" type="range" min="0.01" max="4.00" step="0.01" value='2.00'>
+                </div>
+                <div class="span2">
+                    <label>Rotate:</label>
+                    <input id="rotate" type="range" min="1" max="360" step="1" value='0'>
                 </div>
             </fieldset>
         </form>
