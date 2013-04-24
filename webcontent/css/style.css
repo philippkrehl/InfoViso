@@ -1,0 +1,12 @@
+#controlPanel {
+    width: 260px;
+    position: absolute;
+    z-index: 1000;
+    top: 130px;
+    left: 20px;
+    padding: 10px;
+    border: 1px solid #b3b3b3;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+}
