@@ -1,5 +1,6 @@
 {
     "name": "InfoViso",
+    "author": "ich@philippkrehl.de",
     "version": "0.6",
     "dependencies" : {
         "express": "3.2.0",
