@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="40643b02-eddc-450b-825c-a718e192fe32" name="Default" comment="" />
+    <list default="true" id="40643b02-eddc-450b-825c-a718e192fe32" name="Default" comment="Version 0.5.1 (Balken Version)">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+    </list>
     <ignored path="InfoViso.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="40643b02-eddc-450b-825c-a718e192fe32" time="1366796487340" ignored="false" />
-    <file path="/requestServer.js" changelist="40643b02-eddc-450b-825c-a718e192fe32" time="1366793922836" ignored="false" />
+    <file path="/Dummy.txt" changelist="40643b02-eddc-450b-825c-a718e192fe32" time="1366833512539" ignored="false" />
+    <file path="/requestServer.js" changelist="40643b02-eddc-450b-825c-a718e192fe32" time="1366800595650" ignored="false" />
     <file path="/a.js" changelist="40643b02-eddc-450b-825c-a718e192fe32" time="1363729906618" ignored="false" />
     <file path="/index.html" changelist="40643b02-eddc-450b-825c-a718e192fe32" time="1364112966294" ignored="false" />
     <file path="/balken.html" changelist="40643b02-eddc-450b-825c-a718e192fe32" time="1365878105616" ignored="false" />
@@ -26,7 +28,6 @@
     <file path="$PROJECT_DIR$/node_modules/socket.io/node_modules/policyfile/examples/basic.fallback.js" changelist="40643b02-eddc-450b-825c-a718e192fe32" time="1366795483928" ignored="false" />
     <file path="$PROJECT_DIR$/node_modules/socket.io/node_modules/socket.io-client/node_modules/ws/lib/BufferUtil.js" changelist="40643b02-eddc-450b-825c-a718e192fe32" time="1366795483928" ignored="false" />
     <file path="$PROJECT_DIR$/node_modules/socket.io/node_modules/policyfile/tests/unit.test.js" changelist="40643b02-eddc-450b-825c-a718e192fe32" time="1366795483928" ignored="false" />
-    <file path="$PROJECT_DIR$/node_modules/socket.io/index.js" changelist="40643b02-eddc-450b-825c-a718e192fe32" time="1366795483928" ignored="false" />
     <file path="$PROJECT_DIR$/node_modules/socket.io/node_modules/socket.io-client/test/node/builder.test.js" changelist="40643b02-eddc-450b-825c-a718e192fe32" time="1366795483928" ignored="false" />
     <file path="$PROJECT_DIR$/node_modules/socket.io/node_modules/socket.io-client/node_modules/ws/bench/parser.benchmark.js" changelist="40643b02-eddc-450b-825c-a718e192fe32" time="1366795483928" ignored="false" />
     <file path="$PROJECT_DIR$/node_modules/socket.io/node_modules/socket.io-client/node_modules/ws/lib/WebSocket.js" changelist="40643b02-eddc-450b-825c-a718e192fe32" time="1366795483928" ignored="false" />
@@ -37,6 +38,8 @@
     <file path="$PROJECT_DIR$/node_modules/socket.io/node_modules/socket.io-client/node_modules/ws/test/WebSocketServer.test.js" changelist="40643b02-eddc-450b-825c-a718e192fe32" time="1366795483928" ignored="false" />
     <file path="$PROJECT_DIR$/node_modules/socket.io/node_modules/socket.io-client/node_modules/ws/test/autobahn-server.js" changelist="40643b02-eddc-450b-825c-a718e192fe32" time="1366795483929" ignored="false" />
     <file path="$PROJECT_DIR$/node_modules/socket.io/node_modules/socket.io-client/node_modules/ws/test/WebSocket.test.js" changelist="40643b02-eddc-450b-825c-a718e192fe32" time="1366795483929" ignored="false" />
+    <file path="/Procfile" changelist="40643b02-eddc-450b-825c-a718e192fe32" time="1366797192499" ignored="false" />
+    <file path="/package.json" changelist="40643b02-eddc-450b-825c-a718e192fe32" time="1366833491028" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,10 +59,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="requestServer.js" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/requestServer.js">
+      <file leaf-file-name="package.json" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/package.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="13" column="79" selection-start="445" selection-end="445" vertical-scroll-proportion="0.3482143">
+            <state line="2" column="36" selection-start="62" selection-end="62" vertical-scroll-proportion="0.054744527">
               <folding />
             </state>
           </provider>
@@ -89,14 +92,16 @@
         <option value="$PROJECT_DIR$/NodeVersion/webcontent/css/style.css" />
         <option value="$PROJECT_DIR$/NodeVersion/webcontent/finale.html" />
         <option value="$PROJECT_DIR$/NodeVersion/requestServer.js" />
+        <option value="$PROJECT_DIR$/Procfile" />
         <option value="$PROJECT_DIR$/requestServer.js" />
+        <option value="$PROJECT_DIR$/package.json" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
     <option name="y" value="22" />
     <option name="width" value="1280" />
-    <option name="height" value="719" />
+    <option name="height" value="718" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -155,6 +160,20 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="InfoViso" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="InfoViso" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="InfoViso" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="node_modules" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -269,7 +288,35 @@
       <created>1366796504411</created>
       <updated>1366796504411</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Version 0.5.1 (Balken Version)">
+      <created>1366801343340</created>
+      <updated>1366801343340</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Version 0.5.1 (Balken Version)">
+      <created>1366801538740</created>
+      <updated>1366801538740</updated>
+    </task>
+    <task id="LOCAL-00008" summary="heroku&#10;">
+      <created>1366801857292</created>
+      <updated>1366801857292</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Heroku">
+      <created>1366802353686</created>
+      <updated>1366802353686</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Version 0.5.1 (Balken Version)">
+      <created>1366831432229</created>
+      <updated>1366831432229</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Heroku">
+      <created>1366831595371</created>
+      <updated>1366831595371</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Version 0.5.1 (Balken Version)">
+      <created>1366833515822</created>
+      <updated>1366833515822</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TodoView" selected-index="3">
@@ -293,7 +340,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="22" width="1280" height="719" extended-state="0" />
+    <frame x="0" y="22" width="1280" height="718" extended-state="0" />
     <editor active="false" />
     <layout>
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -374,6 +421,9 @@
     <MESSAGE value="Version 0.4.1" />
     <MESSAGE value="Version 0.4.2" />
     <MESSAGE value="Version 0.5 (Kreis Version)" />
+    <MESSAGE value="&#10;" />
+    <MESSAGE value="heroku&#10;" />
+    <MESSAGE value="Heroku" />
     <MESSAGE value="Version 0.5.1 (Balken Version)" />
   </component>
   <component name="XDebuggerManager">
@@ -382,11 +432,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/requestServer.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="52" column="16" selection-start="1355" selection-end="1355" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/requestServer.js">
       <provider selected="true" editor-type-id="text-editor">
         <state line="50" column="16" selection-start="1237" selection-end="1237" vertical-scroll-proportion="0.0" />
@@ -451,9 +496,44 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/express/Readme.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.58928573">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/express/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3" column="19" selection-start="100" selection-end="105" vertical-scroll-proportion="0.08395522">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/socket.io/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="20" selection-start="39" selection-end="45" vertical-scroll-proportion="-1.25">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Procfile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/requestServer.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="79" selection-start="445" selection-end="445" vertical-scroll-proportion="0.3482143">
+        <state line="3" column="51" selection-start="153" selection-end="153" vertical-scroll-proportion="0.08050089">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="36" selection-start="62" selection-end="62" vertical-scroll-proportion="0.054744527">
           <folding />
         </state>
       </provider>
