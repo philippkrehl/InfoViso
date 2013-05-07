@@ -2,7 +2,7 @@ var app 		= require('express')();
 var http 		= require('http');
 var express     = require('express');
 var port        = Number(process.env.PORT || 8888);
-var httpServer 	= require('http').createServer(app).listen(port);
+var httpServer 	= http.createServer(app).listen(port);
 var io 			= require('socket.io').listen(httpServer);
 
 
@@ -17,22 +17,9 @@ app.configure(function () {
     app.use('/img', express.static(__dirname + '/webcontent/img'));
 });
 
-// heroku configuration
-/*
-io.configure(function () {
-    io.set("transports", ["xhr-polling"]);
-    io.set("polling duration", 10);
-});
-*/
-
 app.get('/', function (req, res) {
 	res.sendfile(__dirname + '/webcontent/index.html');
 	
-});
-
-app.get('/finale', function (req, res) {
-    res.sendfile(__dirname + '/webcontent/finale.html');
-
 });
 
 io.sockets.on('connection', function (socket) {
@@ -54,7 +41,6 @@ io.sockets.on('connection', function (socket) {
                     hostname: 'api.nytimes.com',
                     port: 80,
                     path: '/svc/search/v1/article?format=json&query='+ data.content +'+publication_year%3A%5B'+ t +'%5D&facets=publication_month&api-key=4ab2cc4152fc06ea2b955b05872c2085:15:67471795',
-                    method: 'GET',
                     headers: { 'Content-Type': 'application/json' }
                 };
 
@@ -83,7 +69,7 @@ io.sockets.on('connection', function (socket) {
     }) ;
 	
 	socket.on('diconnect', function(){
-		// disconet des client
+        console.log('Cleint disconnect');
 	});
 });
 

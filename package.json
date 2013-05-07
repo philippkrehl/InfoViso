@@ -1,7 +1,7 @@
 {
     "name": "InfoViso",
     "author": "ich@philippkrehl.de",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "dependencies" : {
         "express": "3.2.0",
         "socket.io": "0.9.14"

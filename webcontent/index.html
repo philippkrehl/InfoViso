@@ -1,208 +1,655 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8">
-		<title>InfoViso</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="/css/bootstrap.min.css" rel="stylesheet" media="screen">
-        <link href="/css/bootstrap-responsive.min.css" rel="stylesheet">
+<head>
+<meta charset="UTF-8">
+<title>InfoViso</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="/css/bootstrap.min.css" rel="stylesheet" media="screen">
+<link href="/css/bootstrap-responsive.min.css" rel="stylesheet">
+<link href="/css/style.css" rel="stylesheet">
+<link href="/css/ir_black.css" rel="stylesheet">
 
-		<script src="/socket.io/socket.io.js"></script>
-        <script src="/libraries/jquery-1.9.1.min.js"></script>
-        <script src="/libraries/bootstrap.min.js"></script>
-        <script src="/libraries/processing-1.4.1.min.js"></script>
-        <script src="/libraries/moment.min.js"></script>
-        <script src="/libraries/jquery.overscroll.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/libraries/jquery-1.9.1.min.js"></script>
+<script src="/libraries/bootstrap.min.js"></script>
+<script src="/libraries/processing-1.4.1.min.js"></script>
+<script src="/libraries/moment.min.js"></script>
+<script src="/libraries/highlight.pack.js"></script>
 
-		<script type="text/javascript">
+<script type="text/javascript">
 
-            $(document).ready(function(){
+$(document).ready(function(){
 
-                var sketch          = new Processing.Sketch();
-                var sketchWidth     = $(window).width();
-                var sketchHeigth    = 440;
-                var socket          = io.connect();  //globales io Object, des Servers, aufrufen
-                var yearBegin       = 1993;
-                var yearEnd         = 2012;
-                var processingArray = new Array(yearEnd-yearBegin+1);
-                var scale           = 1.00;
+    var sketch              = new Processing.Sketch();
+    sketch.use3DContext     = true;
+    var sketchWidth         = $(document).width();
+    var sketchHeigth        = 540;
+    var socket              = io.connect();  //globales io Object, des Servers, aufrufen
+    var scale               = 1.00;
+    var rotate              = 0.00;
+    var yAchse              = 0.00;
+    var xAchse              = 0.00;
+    var yearBegin           = 1992;
+    var yearEnd             = 2012;
+    var amountRequest       = 0;
+    var requestArray        = new Array();
+    var currentRequest      = 0;
+    var currentColor        = 0;
 
-                for(var x = 0; x < processingArray.length; x++){
-                    processingArray[x] = {
-                        'year': yearBegin,
-                        'zeit': 0,
-                        'nyt' : 0
-                    };
-                    yearBegin++;
-                }
+    var colorMap            = {
+        '1': 0xFB2182B,
+        '2': 0xFFDDBC7,
+        '3': 0xF92C5DE,
+        '4': 0xF053061,
+        '5': 0xFABDDA4
+    };
 
-                // Daten senden für Zeit online
-                socket.emit('zeit', { content: 'facebook' });
+    // Der ColorMap die Funktion Size geben, um die Anzahl der Einträge zu erfahren.
+    colorMap.size = function() {
+        var size = 0, key;
+        for (key in this) {
+            if (this.hasOwnProperty(key) && key !== 'size') size++;
+        }
+        return size;
+    };
 
-                // Daten empfangen von Zeit online
-                socket.on('zeitResponse', function(data){
-                    for(var i = 0; i < processingArray; i++){
-                        processingArray[i].zeit = 0;
-                    }
-                    // API Request Verarbeiten: Jahreszahl und Anzahl der vorgekommenen Wörter pro Jahr in einem Array konvertieren
-                    // und Gesammtanzahl der gefunden Wörter
-                    $.each(data.facets.release_date, function(date, value){
-                        for(var x = 0; x < processingArray.length; x++){
-                            if(date !== 'start' && date !== 'end' && date !== 'gap') {
-                                if(Number(moment(date).format('YYYY')) == processingArray[x].year){
-                                    processingArray[x].zeit = value;
-                                    break;
-                                };
-                            };
-                        };
+    var processingObjectCreater = function () {
+        var processingObject = {};
+        var color =  colorMap[Math.floor((Math.random()*colorMap.size())+1)];
+
+        for(var x = yearBegin; x <= yearEnd; x++){
+            processingObject[x] = {
+                '01' : 0,
+                '02' : 0,
+                '03' : 0,
+                '04' : 0,
+                '05' : 0,
+                '06' : 0,
+                '07' : 0,
+                '08' : 0,
+                '09' : 0,
+                '10' : 0,
+                '11' : 0,
+                '12' : 0
+            }
+        };
+
+        while (color === currentColor) {
+            color = colorMap[Math.floor((Math.random()*colorMap.size())+1)];
+        };
+        processingObject.color = color;
+        currentColor = color;
+
+        requestArray[amountRequest] = processingObject;
+        amountRequest++;
+    };
+
+    processingObjectCreater();
+
+    // Daten senden für New York Times
+    socket.emit('nyt', { content: 'Iraq', yearBegin: yearBegin, yearEnd: yearEnd });
+
+    socket.on('nytResponse', function(data){
+        // Test ob das ResponseObject gefüllt ist
+        if(Object.keys( data.facets ).length !== 0){
+            // processingObject mit Daten aus dem Response füllen
+            for(var t = 0; t < data.facets.publication_month.length; t++){
+                requestArray[currentRequest][data.tokens[1].substring(18,22)][data.facets.publication_month[t].term] =  data.facets.publication_month[t].count;
+            }
+        }
+    });
+
+    sketch.attachFunction = function(processing){
+
+        processing.setup = function(){
+            processing.size(sketchWidth,sketchHeigth, processing.P3D);
+            processing.noStroke();
+            processing.smooth();
+        };
+
+        processing.draw = function(){
+
+            //processing.beginCamera();
+            //processing.rotateX(processing.frameCount/100.0);
+            //processing.endCamera();
+
+            // Mittelpunkt für die Rotation setzten
+            processing.translate(350,400,-800); // setzt das Koordinatensystem in die mitte
+            processing.scale(scale);
+            processing.rotateY(processing.radians(rotate));
+            processing.translate(0,-yAchse);
+            processing.translate(-xAchse,0);
+            processing.background(237);
+            processing.translate(-sketchWidth,550);
+
+            var translateZ = 0;
+            for(var i = 0; i < amountRequest; i++) {
+                processing.pushMatrix();
+                for(var y = yearBegin; y < yearEnd; y++ ){
+                    // Jahreszahl ausgeben
+                    processing.fill(1);
+                    processing.text(y, 0, 10, 200, 200, 30);
+                    $.each(requestArray[i][y], function(month, value){
+                        processing.translate(20,0,0);
+                        processing.stroke(153);
+                        // Bug - https://processing-js.lighthouseapp.com/projects/41284/tickets/1976-alpha-value-in-fill-not-working-in-3d
+                        processing.fill(requestArray[i].color,50);
+                        processing.pushMatrix();
+                        if(value != 0){
+                            processing.translate(0,-value/2,translateZ);
+                            processing.box(20,-value,20);
+                         } else {
+                            processing.translate(0,0,translateZ);
+                            processing.box(20,-1,20);
+                         }
+                        processing.popMatrix();
                     });
-                });
-
-                // Daten senden für New York Times
-                socket.emit('nyt', { content: 'facebook' });
-
-                socket.on('nytResponse', function(data){
-                    for(var i = 0; i < processingArray; i++){
-                        processingArray[i].nyt = 0;
-                    }
-                    // API Request Verarbeiten: Jahreszahl und Anzahl der vorgekommenen Wörter pro Jahr in einem Array konvertieren
-                    // und Gesammtanzahl der gefunden Wörter
-                    for(var i = 0; i  < data.facets.publication_year.length; i++ ){
-                        for(var x = 0; x < processingArray.length; x++){
-                            if(parseInt(data.facets.publication_year[i].term) == processingArray[x].year){
-                                processingArray[x].nyt = data.facets.publication_year[i].count;
-                                break;
-                            };
-                        };
-                    };
-                });
-
-                sketch.attachFunction = function(processing){
-
-                    processing.setup = function(){
-                        processing.noStroke();
-                        processing.smooth();
-                        processing.background(241, 241, 241);
-                    };
-
-                    processing.draw = function(){
-                        processing.size(sketchWidth,sketchHeigth);
-                        processing.scale(scale);
-                        processing.background(241, 241, 241);
-                        var distanceX = 40;
-                        for(var i = 0; i < processingArray.length; i++){
-                            drawYear(processing,distanceX,0,processingArray[i].zeit*0.2,processingArray[i].nyt*0.2,processingArray[i].year);
-                            distanceX += 40;
-                        };
-                     };
                 };
-
-                var canvas = document.getElementById("myCanvas");
-                // attaching the sketch to the canvas
-                var p = new Processing(canvas, sketch);
-
-                $('#zeitButton').click(function(){
-                    // Daten senden
-                    if($('#zeitInput').val() == ''){
-                        socket.emit('zeit', { content: 'Irak' });
-                    }
-                    else{
-                        socket.emit('zeit', { content: $('#zeitInput').val() });
-                    };
-                });
-
-                $('#nytButton').click(function(){
-                    // Daten senden
-                    if($('#nytInput').val() == ''){
-                        socket.emit('nyt', { content: 'Iraq' });
-                    }
-                    else{
-                        socket.emit('nyt', { content: $('#nytInput').val() });
-                    };
-                });
-
-                $('#scale').change(function(){
-                    scale = this.value;
-                });
-            });
-
-            function drawYear(processing, startPointX, startPointY, value1, value2, year){
-                processing.pushMatrix();
-                //Anfangsposition festlegen
-                processing.translate(startPointX,startPointY);
-                processing.pushMatrix();
-                processing.strokeWeight(2);
-                processing.stroke(140,134,129,20);
-                processing.line(startPointX,startPointY,startPointX,processing.height);
-                //Value 1
-                processing.translate(startPointX,processing.height*0.33);
-                processing.fill(33,51,49,190);
-                processing.ellipseMode(processing.CENTER)
-                processing.ellipse(0,0,value1,value1);
                 processing.popMatrix();
-                // Value 2
-                processing.pushMatrix();
-                processing.translate(startPointX,processing.height*0.66);
-                processing.fill(224,209,163,190);
-                processing.ellipseMode(processing.CENTER)
-                processing.ellipse(0,0,value2,value2);
-                processing.popMatrix();
-                // Year
-                processing.pushMatrix();
-                //processing.translate(startPointX,distanz*5);
-                processing.fill(0);
-                processing.text(year,startPointX-15,processing.height-5);
-                processing.popMatrix();
-                processing.popMatrix();
+                translateZ += 20;
             };
-    </script>
-	</head>
-	<body>
-        <div class="navbar navbar-fixed-top">
-            <div class="navbar-inner">
-                <span class="brand" style="padding-left: 40px;">Informationsvisualisierung</span>
-                <ul class="nav">
-                    <li class="active"><a href="#">App</a></li>
-                    <li><a href="#">Theorie</a></li>
-                    <li><a href="#">Code</a></li>
-                </ul>
+        };
+    };
+
+    var canvas = document.getElementById("myCanvas");
+    // attaching the sketch to the canvas
+    var p = new Processing(canvas, sketch);
+
+    $('#buttonPlus').click(function () {
+        // ein neues processing Object erstellen und diesem eine zufällige Farbe aus der ColorMap zuweisen
+        processingObjectCreater(colorMap[Math.floor((Math.random()*5)+1)]);
+
+        $('#request-field').append("<div class='span3 input-append' style='margin-left: 20px; width: 260px;'>" +
+                "<input id='searchID-" + String(amountRequest-1) + "' type='text'>" +
+                "<button id='buttonID-" + String(amountRequest-1) + "' class='btn' type='button'><i class='icon-search'></i></button>" +
+                "</div>");
+        $("#buttonID-" + String(amountRequest-1)).click(createClickEvent(amountRequest-1, '#searchID-'+ String(amountRequest-1)));
+        var content_wrapper_margin = parseInt($('#content-wrapper').css('margin-top')) + 50;
+        $("#content-wrapper").css("margin-top", content_wrapper_margin + "px");
+    });
+
+    $('#scale').change(function(){
+        scale = this.value;
+    });
+
+    $('#rotate').change(function(){
+        rotate = this.value;
+    });
+
+    $('#yAchse').change(function(){
+        yAchse = this.value;
+    });
+
+    $('#xAchse').change(function(){
+        xAchse = this.value;
+    });
+
+    var createClickEvent = function(arrayId, inputId) {
+        return function () {
+            var search = $(inputId).val();
+            currentRequest = arrayId;
+            // processingObject Werte auf null zurück setzten, damit die Werte aus dem vorigen Request
+            // nicht mit genutzt werden, falls diese nicht überschrieben werden
+            for(var y = yearBegin; y < yearEnd; y++ ){
+                $.each(requestArray[arrayId][y], function(mounth, value){
+                    requestArray[arrayId][y][mounth] = 0;
+                });
+            };
+            socket.emit('nyt', { content: search, yearBegin: yearBegin, yearEnd: yearEnd });
+        }
+    };
+
+    var getColor = function () {
+        return colorMap[2];
+    };
+
+    $('#buttonInit').click(function(){
+        currentRequest = 0;
+
+        // processingObject Werte auf null zurück setzten, damit die Werte aus dem vorigen Request
+        // nicht mit genutzt werden, falls diese nicht überschrieben werden
+        for(var y = yearBegin; y < yearEnd; y++ ){
+            $.each(requestArray[currentRequest][y], function(mounth, value){
+                requestArray[currentRequest][y][mounth] = 0;
+            });
+        };
+
+        // Daten senden
+        if($('#inputInit').val() == ''){
+            socket.emit('nyt', { content: 'Iraq', yearBegin: yearBegin, yearEnd: yearEnd});
+        }
+        else{
+            socket.emit('nyt', { content: $('#inputInit').val(), yearBegin: yearBegin, yearEnd: yearEnd });
+        };
+    });
+
+    $('pre code').each(function(i, e) {hljs.highlightBlock(e)});
+});
+
+</script>
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <span class="brand" style="padding-left: 40px;">Informationsvisualisierung</span>
+        <ul class="nav">
+            <li class="active"><a href="#app">App</a></li>
+            <li><a href="#theorie">Theorie</a></li>
+            <li><a href="#code">Code</a></li>
+        </ul>
                 <span class="text-right help-block" style="padding-right: 20px; padding-top: 10px;">
                     <smal>philipp.krehl@fh-stralsund.de</smal>
                 </span>
-            </div>
+    </div>
+</div>
+<div class="container-fluid" style="margin-top: 45px; padding: 0;">
+    <div class="row-fluid">
+        <div class="page-header" style="margin-bottom: 1px; margin-top: 5px;  padding-bottom: 5px;">
+            <h2 style="margin-left: 10px"><a name="app"></a> Query <small> - Fragen von Interesse - </small> </h2>
         </div>
-        <div class="container-fluid" style="margin-top: 45px; padding: 0;">
-            <div class="row-fluid">
-                <div class="page-header" style="margin-bottom: 10px; margin-top: 5px;  padding-bottom: 5px;">
-                    <h2 style="margin-left: 10px">Querys <small> - Fragen von Interesse - </small> </h2>
+    </div>
+    <div class="row-fluid">
+        <div id="canvasContainer">
+            <canvas id="myCanvas"></canvas>
+        </div>
+    </div>
+    <div class="row-fluid" style="height: 70px;">
+        <form>
+            <fieldset id="request-field" style="width: 260px;">
+                <div class="span3 input-append" style="margin-left: 20px;">
+                    <label>Was sagt New York Times über:</label>
+                    <input id="inputInit" type="text" placeholder="Irak">
+                    <button id="buttonInit" class="btn" type="button"><i class="icon-search"></i></button>
+                    <button id="buttonPlus" class="btn" type="button"><i class="icon-plus-sign"></i></button>
                 </div>
-            </div>
-            <div class="row-fluid" style="height: 70px;">
-                <form>
-                    <fieldset>
-                        <div class="span3 input-append" style="margin-left: 20px;">
-                            <label>Was sagt Zeit Online über:</label>
-                            <input id="zeitInput" type="text" placeholder="Irak">
-                            <button id="zeitButton" class="btn" type="button">Go!</button>
+            </fieldset>
+        </form>
+    </div>
 
-                        </div>
-                        <div class="span3 input-append">
-                            <label>Was sagt New York Times über:</label>
-                            <input id="nytInput" type="text" placeholder="Iraq">
-                            <button id="nytButton" class="btn" type="button">Go!</button>
-                        </div>
-                        <div class="span3">
-                            <label>Scalierung:</label>
-                            <input id="scale" type="range" min="0.01" max="4.00" step="0.01" value='1.00'>
-                        </div>
-                    </fieldset>
-                </form>
-            </div>
-            <div class="row-fluid">
-                <div id="canvasContainer">
-                    <canvas id="myCanvas"></canvas>
-                </div>
-            </div>
+    <div id="controlPanel">
+        <span>Control Pannel:</span>
+        <div>
+            <i class="icon-zoom-in" style="margin-right: 10px; margin-left: 22px;"></i>
+            <input id="scale" type="range" min="0.01" max="4.00" step="0.01" value='2.00'>
         </div>
-	</body>
+        <div>
+            <i class="icon-repeat" style="margin-right: 10px; margin-left: 22px;"></i>
+            <input id="rotate" type="range" min="1" max="360" step="1" value='0'>
+        </div>
+        <div>
+            <i class="icon-arrow-down" style="margin-right: 10px;"></i><i class="icon-arrow-up" style="margin-right: 10px"></i>
+            <input id="yAchse" type="range" min="-1000" max="700" step="1" value='300'>
+        </div>
+        <div>
+            <i class="icon-arrow-left" style="margin-right: 10px;"></i><i class="icon-arrow-right" style="margin-right: 10px"></i>
+            <input id="xAchse" type="range" min="-1000" max="3200" step="1" value='0'>
+        </div>
+    </div>
+
+    <div id="content-wrapper">
+        <a name="theorie"></a>
+        <div class="theorie">
+            <h3 style="margin: 10px;">Theorie <small> - Die Idee hinter der Applikation</small></h3>
+        </div>
+
+
+        <div class="codeBlock">
+            <a name="code"></a>
+            <pre><h4>Node.js: RequestServer Code</h4><code>
+                // dependency's für das Projekt
+
+                // Instanziierung des Express Freamworks
+                var app         = require('express')();
+                // HTTP ist ein internes Modul von Node für den Support des HTTP Protokolls
+                var http        = require('http');
+                // Express ist ein Web Application Framework für Node
+                var express     = require('express');
+                // festlegen auf welchem Port die App läuft
+                var port        = Number(process.env.PORT || 8888);
+                // einen WebServer instanziieren und an die App, so wie den Port binden
+                var httpServer  = http.createServer(app).listen(port);
+                // socket.io ist ein Framework für die Echtzeitkommunikation zwischen Server und Client, mittels Websockets
+                var io          = require('socket.io').listen(httpServer);
+
+                // Konfiguration der App
+                app.configure(function () {
+                    // Die Funktionalität des Servers erweitern, in dem ein kleiner Logger alle Anfragen protokolliert.
+                    // Diese Funktion wird durch eine Mittelware Strategie getragen.
+                    app.use(function(req, res, next) {
+                        console.log('%s %s', req.method, req.url);
+                        next();
+                    });
+                    // Routing: alle Anfragen auf /libraries, /css und /img weiterleiten in das webcontent Verzeichnis
+                    app.use('/libraries', express.static(__dirname + '/webcontent/libraries'));
+                    app.use('/css', express.static(__dirname + '/webcontent/css'));
+                    app.use('/img', express.static(__dirname + '/webcontent/img'));
+                });
+
+                // Alle Root Anfragen an das Verzeichnis "/webcontent/index.html" weiterleiten
+                // Die index.html stellt den Webclient da, der mit dem Request Server (Node.js) kommuniziert über Websockets
+                app.get('/', function (req, res) {
+                    res.sendfile(__dirname + '/webcontent/index.html');
+                });
+
+                // Event Handling für den Socket.io Server
+                // Wenn ein Client sich beim Socket.io Server anmeldet wird ein socket Objekt zurück gegeben,
+                // das die Verbindung repräsentiert.
+                io.sockets.on('connection', function (socket) {
+
+                    // Generelle Funktion:
+                    // Daten an Client senden: socket.emit();
+                    // Daten vom Client empfangen: socket.on('EVENT', function(data){... mach was mit den Daten};);
+
+                    // Event Listener, der auf das Event "nyt" hört. Wenn Daten vom Client gesendet werden, werden diese durch den
+                    // Event Handler (anonyme Funktion) verarbeitet. In diesem Fall ist es ein JSON Objekt mit dem Suchwort, dem Startdatum
+                    // und dem Enddatum
+                    socket.on('nyt', function(data){
+                        // Hilfsvariable, die das Anfangsjahr trägt
+                        var t = data.yearBegin;
+
+
+                        // Pro Jahr wird ein Get Request gesendet, das heißt für eine Zeitreihe von 20 Jahren müssen 20 Request gesendet werden.
+                        // Jedoch hat die NYT ein Limit "Question per Secend" in der API verbaut, somit müssen die Request durch eine setInterval
+                        // Funtion künstlich verlangsamt werden. Dies ist der Grund für die setInterval Funktion.
+                        var interval = setInterval(function(){
+
+                            // Vorbereiten des Get Request für das Anfrage der gesuchten Daten
+                            var options = {
+                                hostname: 'api.nytimes.com',
+                                port: 80,
+                                path: '/svc/search/v1/article?format=json&query='+ data.content +'+publication_year%3A%5B'+ t +'NYT_API_KEY',
+                                headers: { 'Content-Type': 'application/json' }
+                            };
+
+                            // Senden des Get Request und Verarbeiten des Response durch einen Event Handler
+                            http.get(options, function(res) {
+                                // Hilfsvariable zum temporären speichern das empfangenen Daten
+                                var data = '';
+
+                                // Der Response stellt einen Stream von Daten da, der in der Hilfsvariable gespeichert wird.
+                                // Das Empfangen von Daten wird durch das Event 'Data' signalisiert.
+                                res.on('data', function (chunk){
+                                    data += chunk;
+                                });
+
+                                // Wenn alle Daten empfangen wurden, wird das Event 'End' gesendet und die Daten werden
+                                // im JSON Format an den Client gesendet, in dem der Socket.io Server das Event 'nytResponse' sendet
+                                // und der Client auf das Signal (Event) reagiert.
+                                res.on('end',function(){
+                                    socket.emit('nytResponse', JSON.parse(data));
+                                });
+                            });
+
+                            t++;
+                            if(t == data.yearEnd+1){ clearInterval(interval); }
+                        },150);
+                    });
+
+                    // Log das der Client sich vom Server getrennt hat
+                    socket.on('diconnect', function(){
+                        console.log('Cleint disconnect');
+                    });
+                });
+            </code></pre>
+        </div>
+
+        <div class="codeBlock">
+            <pre><h4>index.html: Client Code</h4><code>
+            // Im Vorfeld wurden bereits alle Dependencies durch Script Tags initialisiert
+            // und die DOM Elemente sind mit Hilfe von jQuery geladen.
+
+            // Globale Variablen
+
+            // Erzeugen eines neuen Sketch Objektes und dessen Konfiguration
+            var sketch              = new Processing.Sketch();
+            sketch.use3DContext     = true;
+            var sketchWidth         = $(document).width();
+            var sketchHeigth        = 540;
+
+            // globales io Object, das sich mit dem Server verbindet (.connect with no args does auto-discovery)
+            var socket              = io.connect();
+
+            // Hilfsvariablen für die Interkation mit dem User durch die Controlls
+            var scale               = 1.00;
+            var rotate              = 0.00;
+            var yAchse              = 0.00;
+            var xAchse              = 0.00;
+
+            // Start- und Endjahr für die Request an die New York Times
+            var yearBegin           = 1992;
+            var yearEnd             = 2012;
+
+            // Hilfsvariable zum zählen der Requestfelder (Request)
+            var amountRequest       = 0;
+
+            // Datenstruktur zum speichern der Requestobjekte
+            var requestArray        = new Array();
+
+            // Hilfsvariable zum speichern des aktuellen Request
+            var currentRequest      = 0;
+
+            // Datenstruktur zum Speicher der verschieden Farben für die Request
+            var currentColor        = 0;
+            var colorMap            = {
+                '1': 0xFB2182B,
+                '2': 0xFFDDBC7,
+                '3': 0xF92C5DE,
+                '4': 0xF053061,
+                '5': 0xFABDDA4
+            };
+
+            // Der colorMap die Funktion Size geben, um die Anzahl der Einträge zu erfahren.
+            colorMap.size = function() {
+                var size = 0, key;
+                for (key in this) {
+                    if (this.hasOwnProperty(key) && key !== 'size') size++;
+                };
+                return size;
+            };
+
+            // Funktion zum erzeugen eines Requestobjektes in dem die Daten des RequestServers gespeichert werden und
+            // zusätzlich noch die Farbe des jeweiligen Request
+            // Für diesen Zweck wird das JSON Format genutzt, um die Struktur des Objektes festzulegen
+            var processingObjectCreater = function () {
+                var processingObject  = {};
+                var color             =  colorMap[Math.floor((Math.random()*colorMap.size())+1)];
+
+                for(var x = yearBegin; x <= yearEnd; x++){
+                    processingObject[x] = {
+                    '01' : 0,
+                    '02' : 0,
+                    '03' : 0,
+                    '04' : 0,
+                    '05' : 0,
+                    '06' : 0,
+                    '07' : 0,
+                    '08' : 0,
+                    '09' : 0,
+                    '10' : 0,
+                    '11' : 0,
+                    '12' : 0
+                    }
+                };
+
+                while (color === currentColor) {
+                    color = colorMap[Math.floor((Math.random()*colorMap.size())+1)];
+                };
+                processingObject.color      = color;
+                currentColor                = color;
+                requestArray[amountRequest] = processingObject;
+                amountRequest++;
+            };
+
+            // Initiales erzugen eines Requestobjektes zum speichern des initialen Request
+            processingObjectCreater();
+
+            // Initiales senden der Daten für für den ersten Request
+            socket.emit('nyt', { content: 'Iraq', yearBegin: yearBegin, yearEnd: yearEnd });
+
+            // Empfangen der vom RequestServer gesendeten Daten, so wie deren Verarbeitung
+            socket.on('nytResponse', function(data){
+
+                // Test ob das ResponseObject gefüllt ist
+                if(Object.keys( data.facets ).length !== 0){
+
+                    // ProcessingObjekt mit Daten aus dem Response füllen
+                    for(var t = 0; t < data.facets.publication_month.length; t++){
+                        requestArray[currentRequest][data.tokens[1].substring(18,22)][data.facets.publication_month[t].term] =  data.facets.publication_month[t].count;
+                    };
+                };
+            });
+
+            // Attaching js code to the canvas by using a sketch object
+            // Der attachFunction des Sketch Objektes wird ein processing Objekt übergeben, dass wiederum
+            // die Setup und draw Methode implementiert.
+            sketch.attachFunction = function(processing){
+
+                // Setup Funtion
+                processing.setup = function(){
+                    processing.size(sketchWidth,sketchHeigth, processing.P3D);
+                    processing.noStroke();
+                    processing.smooth();
+                };
+
+                // Draw Funktion
+                processing.draw = function(){
+
+                    // Mittelpunkt für die Rotation setzten
+                    processing.translate(350,400,-800);
+
+                    // Interaktionsmöglichkeiten durch Userinteraktion
+                    processing.scale(scale);
+                    processing.rotateY(processing.radians(rotate));
+                    processing.translate(0,-yAchse);
+                    processing.translate(xAchse,0);
+
+                    // Hintergrundfarbe setzen und das Koordinatensystem verschieben
+                    processing.background(237);
+                    processing.translate(-sketchWidth,550);
+
+                    // Jeder Request wird um 20 Pixel auf der Z-Achse verschoben. Für diesen Zweck wird eine Hilfsvariable genutzt
+                    var translateZ = 0;
+
+                    // Darstellung der Jahresdaten, mit Hilfe von push- und popMatrix, für das Koordinatenmanagement
+                    for(var i = 0; i < amountRequest; i++) {
+                        processing.pushMatrix();
+                        for(var y = yearBegin; y < yearEnd; y++ ){
+
+                            // Jahreszahl ausgeben
+                            processing.fill(1);
+                            processing.text(y, 0, 10, 200, 200, 30);
+
+                            // Darstellung der Monatsdaten
+                            $.each(requestArray[i][y], function(month, value){
+                                processing.translate(20,0,0);
+                                processing.stroke(153);
+
+                                // Bug - https://processing-js.lighthouseapp.com/projects/41284/tickets/1976-alpha-value-in-fill-not-working-in-3d
+                                processing.fill(requestArray[i].color,50);
+                                processing.pushMatrix();
+                                if(value != 0){
+                                    processing.translate(0,-value/2,translateZ);
+                                    processing.box(20,-value,20);
+                                } else {
+                                    processing.translate(0,0,translateZ);
+                                    processing.box(20,-1,20);
+                                }
+                                processing.popMatrix();
+                            });
+                        };
+                        processing.popMatrix();
+                        translateZ += 20;
+                    };
+                };
+            };
+
+            // Mit Hilfe eines Canvas Elementes wird der Sketch dargestellt.
+            // Für diesen Zweck wurde ein Canvas Element im DOM eingebunden und die Referenz hergestellt.
+            var canvas = document.getElementById("myCanvas");
+
+            // Der Sketch wird an das Canvas gebunden
+            var p = new Processing(canvas, sketch);
+
+            // Click Event
+            // Wenn der Benutzer auf das Pluszeichen drückt werden neue HTML Elemente erzeugt und in den DOM eingehangen.
+            $('#buttonPlus').click(function () {
+
+                // Ein neues Processingobject erstellen und diesem eine zufällige Farbe aus der ColorMap zuweisen.
+                processingObjectCreater(colorMap[Math.floor((Math.random()*5)+1)]);
+
+                // Erzeugen der HTML Elemente und einbinden in den DOM.
+                $('#request-field').append("&lt;div class='span3 input-append' style='margin-left: 20px; width: 260px;'&gt;"
+                        "&lt;input id='searchID-" + String(amountRequest-1) + "' type='text'&gt;" +
+                        "&lt;button id='buttonID-" + String(amountRequest-1) + "' class='btn' type='button'&gt;&lt;i class='icon-search'&gt;&lt;/i&gt;&lt;/button&gt;" +
+                    "&lt;/div&gt;");
+
+                // Dem neu erzeugten Button einen Click-Event-Handler zuweisen
+                $("#buttonID-" + String(amountRequest-1)).click(createClickEvent(amountRequest-1, '#searchID-'+ String(amountRequest-1)));
+             });
+
+            // Überwachen der Controll Elemente für die Userinteraktion
+            $('#scale').change(function(){
+                scale = this.value;
+            });
+
+            // Überwachen der Controll Elemente für die Userinteraktion
+            $('#rotate').change(function(){
+                rotate = this.value;
+            });
+
+            // Überwachen der Controll Elemente für die Userinteraktion
+            $('#yAchse').change(function(){
+                yAchse = this.value;
+            });
+
+            // Überwachen der Controll Elemente für die Userinteraktion
+            $('#xAchse').change(function(){
+                xAchse = this.value;
+            });
+
+            // Funktion zum erzeugen eines Click-Event-Handler, hierbei werden die Closure Eigenschaften von JavaScript genutzt,
+            // um die Eigenschaften der Variablen zu konservieren
+            var createClickEvent = function(arrayId, inputId) {
+                return function () {
+                    var search      = $(inputId).val();
+                    currentRequest  = arrayId;
+
+                    // ProcessingObject Werte auf Null zurücksetzten, damit die Werte aus dem vorigen Request
+                    // nicht mit genutzt werden, falls diese nicht überschrieben werden
+                    for(var y = yearBegin; y < yearEnd; y++ ){
+                        $.each(requestArray[arrayId][y], function(mounth, value){
+                            requestArray[arrayId][y][mounth] = 0;
+                        });
+                    };
+                    // angefragte Daten, durch den Benutzer, an den RequestServer senden - mittels socket.io Server
+                    socket.emit('nyt', { content: search, yearBegin: yearBegin, yearEnd: yearEnd });
+                }
+            };
+
+            // Start Button
+            $('#buttonInit').click(function(){
+                currentRequest = 0;
+
+                // ProcessingObject Werte auf Null zurücksetzten, damit die Werte aus dem vorigen Request
+                // nicht mit genutzt werden, falls diese nicht überschrieben werden
+                for(var y = yearBegin; y < yearEnd; y++ ){
+                    $.each(requestArray[currentRequest][y], function(mounth, value){
+                        requestArray[currentRequest][y][mounth] = 0;
+                    });
+                };
+
+                // Daten senden an den socket.io Server
+                if($('#inputInit').val() == ''){
+                    socket.emit('nyt', { content: 'Iraq', yearBegin: yearBegin, yearEnd: yearEnd});
+                }
+                else{
+                    socket.emit('nyt', { content: $('#inputInit').val(), yearBegin: yearBegin, yearEnd: yearEnd });
+                };
+            });
+
+            </code></pre>
+        </div>
+    </div>
+</div>
+</body>
 </html>
