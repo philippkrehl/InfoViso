@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="40643b02-eddc-450b-825c-a718e192fe32" name="Default" comment="&quot;version&quot;: &quot;0.0.7&quot;,">
+    <list default="true" id="40643b02-eddc-450b-825c-a718e192fe32" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="InfoViso.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="40643b02-eddc-450b-825c-a718e192fe32" time="1367945967625" ignored="false" />
+    <file path="/Dummy.txt" changelist="40643b02-eddc-450b-825c-a718e192fe32" time="1368002689472" ignored="false" />
     <file path="/requestServer.js" changelist="40643b02-eddc-450b-825c-a718e192fe32" time="1367938689349" ignored="false" />
     <file path="/a.js" changelist="40643b02-eddc-450b-825c-a718e192fe32" time="1363729906618" ignored="false" />
-    <file path="/index.html" changelist="40643b02-eddc-450b-825c-a718e192fe32" time="1367945414539" ignored="false" />
+    <file path="/index.html" changelist="40643b02-eddc-450b-825c-a718e192fe32" time="1368002670086" ignored="false" />
     <file path="/balken.html" changelist="40643b02-eddc-450b-825c-a718e192fe32" time="1365878105616" ignored="false" />
     <file path="/finale.html" changelist="40643b02-eddc-450b-825c-a718e192fe32" time="1367331500777" ignored="false" />
     <file path="$PROJECT_DIR$/../Projektstudium/webclient/index.html" changelist="40643b02-eddc-450b-825c-a718e192fe32" time="1366100853434" ignored="false" />
@@ -63,7 +63,7 @@
       <file leaf-file-name="index.html" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/webcontent/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="623" column="90" selection-start="27879" selection-end="27879" vertical-scroll-proportion="18.216373">
+            <state line="284" column="71" selection-start="10464" selection-end="10464" vertical-scroll-proportion="0.55658627">
               <folding>
                 <element signature="n#style#0;n#span#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#span#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -79,8 +79,9 @@
                 <element signature="n#style#0;n#i#1;n#div#2;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#i#0;n#div#3;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#i#1;n#div#3;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#h3#0;n#div#0;n#div#4;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <marker date="1367945463000" expanded="false" signature="5932:5964" placeholder="..." />
+                <element signature="n#style#0;n#article#0;n#div#0;n#div#4;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#h3#0;n#article#0;n#div#0;n#div#4;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <marker date="1368002670000" expanded="false" signature="5932:5964" placeholder="..." />
               </folding>
             </state>
           </provider>
@@ -199,24 +200,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="InfoViso" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="InfoViso" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="webcontent" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="css" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
     </panes>
@@ -224,15 +207,15 @@
   <component name="PropertiesComponent">
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="options.lastSelected" value="reference.settings.ide.settings.web.browsers" />
-    <property name="recentsLimit" value="5" />
     <property name="ChangesBrowser.SHOW_FLATTEN" value="false" />
-    <property name="restartRequiresConfirmation" value="true" />
+    <property name="recentsLimit" value="5" />
+    <property name="options.lastSelected" value="reference.settings.ide.settings.web.browsers" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/NodeVersion/webcontent/index.html" />
+    <property name="restartRequiresConfirmation" value="true" />
     <property name="FullScreen" value="false" />
     <property name="DefaultHtmlFileTemplate" value="Html5" />
-    <property name="options.searchVisible" value="true" />
     <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.searchVisible" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -372,7 +355,15 @@
       <created>1367945946839</created>
       <updated>1367945946839</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="&quot;version&quot;: &quot;0.0.7&quot;,">
+      <created>1368002371514</created>
+      <updated>1368002371516</updated>
+    </task>
+    <task id="LOCAL-00018" summary="&quot;version&quot;: &quot;0.0.7&quot;,">
+      <created>1368002696944</created>
+      <updated>1368002696944</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TodoView" selected-index="3">
@@ -397,13 +388,13 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="22" width="1280" height="722" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32931036" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32931036" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24980111" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20843278" sideWeight="0.60172415" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20843278" sideWeight="0.60172415" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39827585" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -491,9 +482,7 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/webcontent/css/style.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="20" selection-start="341" selection-end="341" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="19" column="20" selection-start="341" selection-end="341" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/webcontent/index.html">
@@ -514,8 +503,9 @@
             <element signature="n#style#0;n#i#1;n#div#2;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#i#0;n#div#3;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#i#1;n#div#3;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#h3#0;n#div#0;n#div#4;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <marker date="1367945463000" expanded="false" signature="5932:5964" placeholder="..." />
+            <element signature="n#style#0;n#article#0;n#div#0;n#div#4;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#h3#0;n#article#0;n#div#0;n#div#4;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <marker date="1368002670000" expanded="false" signature="5932:5964" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -574,16 +564,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/webcontent/css/style.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="20" selection-start="341" selection-end="341" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="19" column="20" selection-start="341" selection-end="341" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/requestServer.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="69" column="4" selection-start="2418" selection-end="2418" vertical-scroll-proportion="0.7069272">
-          <folding />
-        </state>
+        <state line="69" column="4" selection-start="2418" selection-end="2418" vertical-scroll-proportion="0.7069272" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/package.json">
@@ -595,7 +581,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/webcontent/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="623" column="90" selection-start="27879" selection-end="27879" vertical-scroll-proportion="18.216373">
+        <state line="284" column="71" selection-start="10464" selection-end="10464" vertical-scroll-proportion="0.55658627">
           <folding>
             <element signature="n#style#0;n#span#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#span#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -611,8 +597,9 @@
             <element signature="n#style#0;n#i#1;n#div#2;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#i#0;n#div#3;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#i#1;n#div#3;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#h3#0;n#div#0;n#div#4;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <marker date="1367945463000" expanded="false" signature="5932:5964" placeholder="..." />
+            <element signature="n#style#0;n#article#0;n#div#0;n#div#4;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#h3#0;n#article#0;n#div#0;n#div#4;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <marker date="1368002670000" expanded="false" signature="5932:5964" placeholder="..." />
           </folding>
         </state>
       </provider>
