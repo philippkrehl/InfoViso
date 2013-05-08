@@ -224,6 +224,30 @@ $(document).ready(function(){
     });
 
     $('pre code').each(function(i, e) {hljs.highlightBlock(e)});
+
+    // Handing Active Class for NavBar
+    var navApp     = $('#navApp'),
+        navTheorie = $('#navTheorie'),
+        navCode    = $('#navCode');
+
+   navApp.click(function(){
+        navApp.addClass("active");
+        navTheorie.removeClass("active");
+        navCode.removeClass("active");
+   });
+
+   navTheorie.click(function(){
+        navApp.removeClass("active");
+        navTheorie.addClass("active");
+        navCode.removeClass("active");
+
+   });
+
+   navCode.click(function(){
+       navApp.removeClass("active");
+       navTheorie.removeClass("active");
+       navCode.addClass("active");
+   })
 });
 
 </script>
@@ -233,9 +257,9 @@ $(document).ready(function(){
     <div class="navbar-inner">
         <span class="brand" style="padding-left: 40px;">Informationsvisualisierung</span>
         <ul class="nav">
-            <li class="active"><a href="#app">App</a></li>
-            <li><a href="#theorie">Theorie</a></li>
-            <li><a href="#code">Code</a></li>
+            <li id="navApp" class="active"><a href="#app">App</a></li>
+            <li id="navTheorie"><a href="#theorie">Theorie</a></li>
+            <li id="navCode"><a href="#code">Code</a></li>
         </ul>
                 <span class="text-right help-block" style="padding-right: 20px; padding-top: 10px;">
                     <smal>philipp.krehl@fh-stralsund.de</smal>
@@ -289,7 +313,31 @@ $(document).ready(function(){
     <div id="content-wrapper">
         <a name="theorie"></a>
         <div class="theorie">
-            <h3 style="margin: 10px;">Theorie <small> - Die Idee hinter der Applikation</small></h3>
+            <article style="margin-left: 20px; margin-right: 20px; text-align: justify">
+            <h3 style="margin-top: 10px;">Theorie <small> - Die Idee hinter der Applikation</small></h3>
+            <p>
+            Das geschriebene Wort als Spiegel der Gesellschaft. Menschen schreiben über Themen, die von Interesse für Sie und Ihr Umfeld sind.
+            Dies ist die Grundlage meiner Idee, wenn das vorkommen eines Wortes gemessen werden kann, kann eventuell eine Aussage über das gesellschaftliche
+            Interesse  getroffen werden.  Für diesen Zweck wurde die Artikel API der New York Times genutzt, um das Vorkommen eines Wortes über die letzten 20 Jahre zu messen.
+            Des Weiteren ist es möglich nicht nur das Vorkommen eines Wortes zu messen, sondern auch einen Vergleich zwischen mehreren Wörtern herzustellen.
+            Die Visualisierung eines Wortes Erfolg durch ein 3D Säulendiagramm. Wenn viele Wörter miteinander verglichen werden,
+            erhält man eine Art Stadt von Wörtern. Mit Hilfe von 3D Transformationen, wird einem die Möglichkeit gegeben durch die „Stadt von Wörtern“ zu schreiten und diese zu erkunden.
+            </p>
+            <p>
+            Das Projekt diente dem Zweck Technologien zu erproben und neue Möglichkeiten zu er kundschaften.
+            Aus diesem Grund ist das Projekt auch nicht zu 100% fertig bzw. hat Verbesserungspotenzial in Bezug auf manche Funktionalitäten.
+            Unteranderem ist es bis jetzt nur Möglich nach einzelnen Termen zu suchen, komplexe Queries können nicht verarbeitet werden.
+            Des Weiteren gibt es eine Restrektion, der New York Times, die es nicht erlaubt zu viele Request per Sekunde an den Server zu schicken.
+            Dies hat zur Folge das eine manuelle Drosselung der Anfragegeschwindigkeit eingebaut werden musste.
+            </p>
+            <p>
+            Das Projekt wurde auf Heroku.com deployt.
+            Der Quelle Code steht jedoch auf: <a href="https://github.com/philippkrehl/InfoViso " target="_blank">https://github.com/philippkrehl/InfoViso</a> zum Download zur Verfügung
+            und kann mit Hilfe eines Node.js Servers gestartet werden. Der Prozess ist trivial.
+            Der Node.js Server wird installiert (s. <a href="http://www.nodejs.org" target="_blank">http://www.nodejs.org</a>) und anschießend muss mit Hilfe des Node Servers der requestServer.js
+            gestartet werden. Dieser befindet sich als Datei im Projektordner.
+            </p>
+            </article>
         </div>
 
 
